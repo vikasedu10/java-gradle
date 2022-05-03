@@ -1,0 +1,48 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'maven-publish'
+
+mainClassName = 'hello.HelloWorld'
+
+repositories { 
+    mavenCentral() 
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    implementation "joda-time:joda-time:2.2"
+    testImplementation "junit:junit:4.12"
+}
+
+// jar {
+//     archiveBaseName = 'java-gradle-deploy'
+//     archiveVersion =  '0.1.1'
+// }
+
+version '1.1-SNAPSHOT'
+group 'com.example'
+sourceCompatibility = 1.8
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact("build/libs/gd-java-app-$version"+".jar") {
+                extension 'jar'
+            }
+        }
+    }
+    
+    repositories {
+        maven {
+            name 'nexus'
+            url "http://localhost:8081/repository/maven-snapshots/"
+            allowInsecureProtocol = true
+            credentials {
+                username project.repositoryUser
+                password project.repositoryPass
+            }
+        }
+    }
+}
